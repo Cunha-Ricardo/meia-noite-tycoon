@@ -243,7 +243,42 @@ table.team td{vertical-align:middle}
   .panel{grid-column:1 / -1} .kpis{grid-template-columns:repeat(2,1fr)} .types{grid-template-columns:repeat(2,1fr)}
   .kpi b{font-size:21px}
   .hud-hint{display:none}
+  .brand{display:none}
+  .bar{gap:6px 8px;padding-block:8px 10px}
+  .stats{flex:1 1 auto}
+  .stat{flex:1 1 0}
+  .clock{gap:6px}
+  .seg button{min-width:30px;padding:0 8px}
+  .sound-btn{width:34px;padding:0;font-size:0}
+  .sound-btn::before{content:"♪";font-size:16px}
+  .sound-btn[aria-pressed="true"]::before{content:"×";}
+  .icon-btn{width:34px;height:34px}
+  .tabs button{height:34px;padding:0 11px;font-size:12px}
+  .drawer{height:50%}
+  .catalog .dhead{padding:12px 12px 8px;gap:8px}
+  .catalog .dhead h2{font-size:18px}
+  #catChips{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;margin:0 -12px;padding:0 12px}
+  .catalog .dbody{padding:10px 12px 12px}
+  #app.placing .catalog{display:none}
+  .placebar{bottom:calc(12px + env(safe-area-inset-bottom,0px));padding:10px;gap:8px;width:calc(100% - 24px)}
+  .placebar>div{flex:1 1 100%;text-align:center}
+  .placebar kbd{display:none}
 }
+/* catalog and placement helpers */
+#themeBox summary{cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:8px;list-style:none;padding:8px 10px;border-radius:12px;background:var(--surface-2)}
+#themeBox summary::-webkit-details-marker{display:none}
+#themeBox summary::after{content:"▾";color:var(--muted)}
+#themeBox[open] summary::after{content:"▴"}
+.chip .n{opacity:.6;margin-left:4px;font-size:11px}
+.chip.toggle[aria-pressed="true"]{background:var(--jade);border-color:var(--jade);color:#06140e}
+.vcard .warn{color:var(--crimson);font-size:11px}
+.vcard .apl{color:var(--gold);letter-spacing:1px}
+.reticle{position:absolute;z-index:3;left:50%;top:55%;width:44px;height:44px;margin:-22px 0 0 -22px;border:2px solid var(--gold);border-radius:50%;pointer-events:none;box-shadow:0 0 0 2px rgba(0,0,0,.4)}
+.reticle::after{content:"";position:absolute;left:50%;top:50%;width:6px;height:6px;margin:-3px 0 0 -3px;border-radius:50%;background:var(--gold)}
+.coach.min p,.coach.min .iactions{display:none}
+.coach.min{padding:8px 14px;gap:2px;cursor:pointer}
+.coach.min b{font-size:16px}
+.coach.min .eyebrow::after{content:" · toque para ver";color:var(--muted);letter-spacing:.1em}
 /* business, halls and editor */
 .hallbar{position:absolute;z-index:3;top:calc(var(--barH,64px) + 6px);left:50%;transform:translateX(-50%);display:flex;gap:4px;padding:4px;border-radius:20px;background:rgba(17,18,25,.92);border:1px solid var(--outline);max-width:calc(100% - 24px);overflow-x:auto;scrollbar-width:none}
 .hallbar button{height:32px;padding:0 14px;border-radius:16px;border:none;background:transparent;color:var(--on);font:500 12px/1 var(--ui);letter-spacing:.04em;cursor:pointer;white-space:nowrap}
@@ -372,11 +407,11 @@ table.team td{vertical-align:middle}
     <div class="dhead">
       <div class="ttl"><div><span class="eyebrow">Catálogo</span><h2 id="catTitle">Escolha o que construir</h2></div><button class="btn tonal" id="edOpen">Editor de jogos</button></div>
       <div class="chips" id="catChips"></div>
-      <div class="search"><input id="catSearch" type="search" placeholder="Buscar por nome ou tema" aria-label="Buscar"><select id="catSort" aria-label="Ordenar"><option value="appeal">Mais atraentes</option><option value="cheap">Mais baratos</option><option value="pricey">Mais caros</option><option value="edge">Maior vantagem</option><option value="lowedge">Menor vantagem</option></select></div>
+      <div class="search"><input id="catSearch" type="search" placeholder="Buscar por nome ou tema" aria-label="Buscar"><select id="catSort" aria-label="Ordenar"><option value="value">Melhor custo-benefício</option><option value="appeal">Mais atraentes</option><option value="cheap">Mais baratos</option><option value="pricey">Mais caros</option><option value="edge">Maior vantagem</option><option value="lowedge">Menor vantagem</option></select></div>
       <span class="count" id="catCount"></span>
     </div>
     <div class="dbody">
-      <div id="themeBox"><span class="eyebrow" id="themeTitle">Tema do salão</span><div class="themes" id="themes" style="margin-top:8px"></div></div>
+      <details id="themeBox"><summary><span class="eyebrow" id="themeTitle">Tema do salão</span><span class="hint" id="themeCur"></span></summary><div class="themes" id="themes" style="margin-top:8px"></div></details>
       <div class="vgrid" id="catList"></div>
     </div>
     <div class="pager"><button class="btn text" id="pgPrev">‹ Anterior</button><span id="pgInfo"></span><button class="btn text" id="pgNext">Próxima ›</button></div>
@@ -389,8 +424,10 @@ table.team td{vertical-align:middle}
     <div class="dbody" id="iBody"></div>
   </aside>
 
+  <div class="reticle" id="reticle" hidden aria-hidden="true"></div>
   <div class="placebar" id="placebar" hidden>
     <div><b id="pbName">Item</b><br><span id="pbInfo">Toque no chão para colocar</span></div>
+    <button class="btn filled" id="pbPlace" hidden>Colocar aqui</button>
     <button class="btn tonal" id="pbRot">Girar <kbd>R</kbd></button>
     <button class="btn text" id="pbEdit">Editar</button>
     <button class="btn outlined" id="pbCancel">Concluir <kbd>Esc</kbd></button>
@@ -1019,7 +1056,6 @@ function buildModel(v, opts = {}){
     const base = new THREE.Mesh(new THREE.CylinderGeometry(0.3, 0.35, 0.2, 16), accent); base.position.y = 0.1; g.add(base);
     const tube = new THREE.Mesh(new THREE.CylinderGeometry(0.16, 0.16, 3.2, 16), new THREE.MeshStandardMaterial({ color: th.c1, emissive: th.c1, emissiveIntensity: 1.1 })); tube.position.y = 1.8; g.add(tube); out.glow.push(tube);
     const cap = new THREE.Mesh(new THREE.CylinderGeometry(0.3, 0.2, 0.2, 16), accent); cap.position.y = 3.5; g.add(cap);
-    const pl = new THREE.PointLight(new THREE.Color(th.c1), 0.6, 6, 2); pl.position.y = 2; g.add(pl);
   } else if (v.kind === 'statue'){
     const ped = sh(new THREE.Mesh(new THREE.BoxGeometry(0.8, 1.0, 0.8), M(0x1a1a20, { roughness: 0.3 }))); ped.position.y = 0.5; g.add(ped);
     const gm = new THREE.MeshStandardMaterial({ color: th.c1, metalness: 1, roughness: 0.25 });
@@ -1960,7 +1996,7 @@ function buyHall(id){
   const sp = HALL_SPECS[id];
   if (S.mode !== 'free' && S.cash < sp.price){ toast('Caixa insuficiente para abrir esse salão', 'bad'); return; }
   if (S.mode !== 'free') S.cash -= sp.price;
-  S.halls[id].owned = true; buildExtraHall(id); applyHallTheme(hallTheme(id), HALLS[id].mesh);
+  S.halls[id].owned = true; buildExtraHall(id); applyHallTheme(hallTheme(id), HALLS[id].mesh); pointLightsGfx();
   logEvent(`${sp.name} inaugurado`, -sp.price, 'business'); toast(`${sp.name} inaugurado! Vá até ele pelo seletor de salões.`, 'good'); sfx.big();
   checkGoals(); save(); renderHallBar(); renderBusiness();
 }
@@ -2323,15 +2359,16 @@ function updateTop(){
 /* ---------- catalog ---------- */
 const ALLV = TEMPLATES.flatMap(t => Array.from({ length: VARIANTS_PER }, (_, s) => genVariant(t.id, s)));
 const CAT_CHIPS = [['all', 'Todos'], ['cartas', 'Cartas'], ['niqueis', 'Caça-níqueis'], ['roletas', 'Roletas e dados'], ['outros', 'Outros'], ['decor', 'Decoração'], ['servicos', 'Segurança e palco'], ['my', 'Meus modelos']];
-let catSel = 'all', page = 0, placing = null;
+let catSel = 'all', page = 0, placing = null, catAfford = false;
 const PAGE = 20;
 const unlockGoal = tpl => GOALS.findIndex(g => g.unlock.includes(tpl));
 function catalogList(){
   let list = catSel === 'my' ? S.myModels.slice() : ALLV.filter(v => catSel === 'all' || v.cat === catSel);
   const q = $('catSearch').value.trim().toLowerCase();
   if (q) list = list.filter(v => (v.name + ' ' + TPL[v.tpl].name + ' ' + v.theme.name).toLowerCase().includes(q));
+  if (catAfford && S.mode !== 'free') list = list.filter(v => v.cost <= S.cash);
   const srt = $('catSort').value;
-  const key = { appeal: v => -(v.appeal || v.decor || 0), cheap: v => v.cost, pricey: v => -v.cost, edge: v => -(v.edge || 0), lowedge: v => (v.edge == null ? 9 : v.edge) }[srt];
+  const key = { value: v => nonGame(v) ? 1 - (v.decor || 0)/Math.sqrt(v.cost) : -(v.appeal + 1)/Math.sqrt(v.cost), appeal: v => -(v.appeal || v.decor || 0), cheap: v => v.cost, pricey: v => -v.cost, edge: v => -(v.edge || 0), lowedge: v => (v.edge == null ? 9 : v.edge) }[srt];
   list.sort((a, b) => (isUnlocked(a.tpl) ? 0 : 1) - (isUnlocked(b.tpl) ? 0 : 1) || key(a) - key(b));
   return list;
 }
@@ -2339,22 +2376,24 @@ function vcard(v){
   const lock = !isUnlocked(v.tpl), afford = S.mode === 'free' || S.cash >= v.cost;
   const meta = nonGame(v) ? `<span class="vmeta"><em>${money(v.cost)}</em> ${v.cat === 'servicos' ? (v.kind === 'camera' ? 'flagra trapaceiros' : v.kind === 'central' ? 'monitora as câmeras' : v.kind === 'bar' ? `bebidas · ${v.seats} banquetas` : 'shows no salão') : 'decoração +' + v.decor}</span>`
     : `<span class="vmeta"><em${afford ? '' : ' class="neg"'}>${money(v.cost)}</em> casa ${pct(v.edge)} · ${v.seats} lug. · ${moneyC(v.minBet)}–${moneyC(v.maxBet)}</span>`;
-  const sub = lock ? `Libera na meta ${unlockGoal(v.tpl) + 1}` : `${TPL[v.tpl].name}${v.rules ? ' · ' + v.rules : ''}`;
+  const ap = nonGame(v) ? '' : `<span class="apl" title="Atração">${'★'.repeat(clamp(Math.round((v.appeal - 3)/1.4), 1, 5))}</span> `;
+  const sub = lock ? `Libera na meta ${unlockGoal(v.tpl) + 1}` : !afford ? `<span class="warn">Falta ${money(v.cost - S.cash)} no caixa</span>` : `${ap}${TPL[v.tpl].name}${v.rules ? ' · ' + v.rules : ''}`;
   return `<button class="vcard${lock ? ' locked' : ''}" data-key="${v.key}" aria-pressed="${placing && placing.v.key === v.key ? 'true' : 'false'}"><div class="vprev" style="${variantPreview(v)}">${v.glyph}</div><div class="vtext"><b>${v.name}</b><span>${sub}</span>${meta}</div></button>`;
 }
 function renderCatalog(){
   if ($('catalog').hidden) return;
-  $('catChips').innerHTML = CAT_CHIPS.map(([k, n]) => `<button class="chip" data-c="${k}" aria-pressed="${k === catSel}">${n}</button>`).join('');
+  const cnt = k => k === 'my' ? S.myModels.length : k === 'all' ? ALLV.length : ALLV.filter(v => v.cat === k).length;
+  $('catChips').innerHTML = (S.mode === 'free' ? '' : `<button class="chip toggle" data-af="1" aria-pressed="${catAfford}">Cabe no caixa</button>`) + CAT_CHIPS.map(([k, n]) => `<button class="chip" data-c="${k}" aria-pressed="${k === catSel}">${n}<span class="n">${cnt(k).toLocaleString('pt-BR')}</span></button>`).join('');
   const list = catalogList(), pages = Math.max(1, Math.ceil(list.length/PAGE));
   page = clamp(page, 0, pages - 1);
   $('catCount').textContent = catSel === 'my' ? `${list.length} ${list.length === 1 ? 'modelo salvo' : 'modelos salvos'}` : `${list.length.toLocaleString('pt-BR')} variações geradas`;
   $('catList').innerHTML = list.slice(page*PAGE, page*PAGE + PAGE).map(vcard).join('') || `<p class="hint">${catSel === 'my' ? 'Nenhum modelo ainda. Selecione um jogo no salão, ajuste e toque em Salvar como modelo.' : 'Nada encontrado com essa busca.'}</p>`;
   $('pgInfo').textContent = `Página ${(page + 1).toLocaleString('pt-BR')} de ${pages.toLocaleString('pt-BR')}`;
   $('pgPrev').disabled = page <= 0; $('pgNext').disabled = page >= pages - 1;
-  const cur = hallTheme(viewHall); $('themeTitle').textContent = `Tema · ${HALL_SPECS[viewHall].name}`;
+  const cur = hallTheme(viewHall); $('themeTitle').textContent = `Tema · ${HALL_SPECS[viewHall].name}`; $('themeCur').textContent = HALL_THEMES[cur].name;
   $('themes').innerHTML = Object.entries(HALL_THEMES).map(([k, t]) => { const own = S.ownedThemes.includes(k); return `<button data-t="${k}" aria-pressed="${cur === k}" style="background:linear-gradient(135deg, ${t.carpet[0]}, ${t.wall[1]})">${t.name}<br>${own ? (cur === k ? 'em uso' : 'usar') : money(t.price)}</button>`; }).join('');
 }
-$('catChips').addEventListener('click', e => { const b = e.target.closest('[data-c]'); if (b){ catSel = b.dataset.c; page = 0; renderCatalog(); } });
+$('catChips').addEventListener('click', e => { if (e.target.closest('[data-af]')){ catAfford = !catAfford; page = 0; renderCatalog(); return; } const b = e.target.closest('[data-c]'); if (b){ catSel = b.dataset.c; page = 0; renderCatalog(); } });
 $('catSearch').addEventListener('input', () => { page = 0; renderCatalog(); });
 $('catSort').addEventListener('change', () => { page = 0; renderCatalog(); });
 $('pgPrev').onclick = () => { page--; renderCatalog(); }; $('pgNext').onclick = () => { page++; renderCatalog(); };
@@ -2363,6 +2402,7 @@ $('catList').addEventListener('click', e => {
   const v = (catSel === 'my' ? S.myModels : ALLV).find(x => x.key === b.dataset.key) || S.myModels.find(x => x.key === b.dataset.key);
   if (!v) return;
   if (!isUnlocked(v.tpl)){ const gi = unlockGoal(v.tpl); toast(`${TPL[v.tpl].name} libera ao cumprir a meta ${gi + 1}: ${GOALS[gi].text}`); return; }
+  if (S.mode !== 'free' && S.cash < v.cost){ toast(`Faltam ${money(v.cost - S.cash)} no caixa para ${v.name}`, 'bad'); return; }
   startPlacing(v); renderCatalog();
 });
 $('themes').addEventListener('click', e => {
@@ -2383,8 +2423,9 @@ function startPlacing(v, moving = null){
   scene.add(ghost); ghost.visible = false;
   $('placebar').hidden = false; $('pbName').textContent = moving ? `Movendo ${v.name}` : v.name;
   $('pbCancel').innerHTML = moving ? 'Cancelar <kbd>Esc</kbd>' : 'Concluir <kbd>Esc</kbd>'; $('pbEdit').hidden = !!moving;
-  $('pbInfo').textContent = IS_TOUCH ? 'Toque no chão para colocar' : 'Clique no chão para colocar'; $('pbInfo').className = '';
-  if (lastFloor) updateGhost(lastFloor.x, lastFloor.z);
+  $('pbInfo').textContent = IS_TOUCH ? 'Arraste o salão até o círculo e toque em Colocar aqui, ou toque direto no chão' : 'Clique no chão para colocar'; $('pbInfo').className = '';
+  $('pbPlace').hidden = !IS_TOUCH; $('reticle').hidden = !IS_TOUCH; $('app').classList.add('placing');
+  if (IS_TOUCH) centerGhost(); else if (lastFloor) updateGhost(lastFloor.x, lastFloor.z);
 }
 function updateGhost(x, z){
   if (!placing) return;
@@ -2416,15 +2457,18 @@ function confirmPlace(){
   const it = addItem(JSON.parse(JSON.stringify(v)), ci, cj, rot);
   sfx.chip(); pop(it, `−${money(v.cost)}`, 'bad');
   checkGoals(); save(); updateGhost(lastFloor ? lastFloor.x : 0, lastFloor ? lastFloor.z : 0);
+  if (S.mode !== 'free' && S.cash < v.cost){ toast('Caixa insuficiente para outro igual', 'bad'); cancelPlacing(); }
 }
 function cancelPlacing(){
   if (!placing) return;
   if (placing.moving){ markItem(placing.moving, true); placing.moving.model.group.visible = true; }
   if (ghost) scene.remove(ghost);
-  ghost = null; placing = null; $('placebar').hidden = true; renderCatalog();
+  ghost = null; placing = null; $('placebar').hidden = true; $('reticle').hidden = true; $('app').classList.remove('placing'); renderCatalog();
 }
 function rotatePlacing(){ if (!placing) return; placing.rot = (placing.rot + 1) % 4; if (lastFloor) updateGhost(lastFloor.x, lastFloor.z); }
 $('pbRot').onclick = rotatePlacing; $('pbCancel').onclick = cancelPlacing;
+function centerGhost(){ if (!placing) return; const r = canvas.getBoundingClientRect(); const f = floorAt({ clientX: r.left + r.width/2, clientY: r.top + r.height*0.55 }); if (f){ lastFloor = f; updateGhost(f.x, f.z); } }
+$('pbPlace').onclick = () => { centerGhost(); confirmPlace(); };
 $('pbEdit').onclick = () => { if (!placing || placing.moving) return; const v = placing.v; cancelPlacing(); openEditor({ v }); };
 $('edOpen').onclick = () => openEditor({});
 /* ---------- selection and inspector ---------- */
@@ -2962,8 +3006,8 @@ function achPanel(){
 }
 /* tutorial */
 const TUT = [
-  { t: 'Bem-vindo ao seu cassino', x: IS_TOUCH ? 'Você é o dono. Arraste o chão com um dedo para mover a câmera. Com dois dedos, faça pinça para aproximar e gire para mudar o ângulo.' : 'Você é o dono. Arraste o chão para mover a câmera, use a roda para aproximar e o botão direito (ou Q e E) para girar.', ok: s => Math.hypot(cam.tx - s.tx, cam.tz - s.tz) > 3 || Math.abs(cam.dist - s.dist) > 4 || Math.abs(cam.yaw - s.yaw) > 0.4 },
-  { t: 'Abra o catálogo', x: 'Toque na aba Construir. São milhares de mesas, caça-níqueis e decorações.', target: '#tabs [data-v="build"]', ok: () => view === 'build' },
+  { t: 'Bem-vindo ao seu cassino', x: IS_TOUCH ? 'Você é o dono. Arraste o chão com um dedo para mover a câmera. Com dois dedos, faça pinça para aproximar e gire para mudar o ângulo.' : 'Você é o dono. Arraste o chão para mover a câmera, use a roda para aproximar e o botão direito (ou Q e E) para girar.', ok: s => view !== 'salao' || !!selected || !!placing || Math.hypot(cam.tx - s.tx, cam.tz - s.tz) > 3 || Math.abs(cam.dist - s.dist) > 4 || Math.abs(cam.yaw - s.yaw) > 0.4 },
+  { t: 'Abra o catálogo', x: 'Toque na aba Construir. São milhares de mesas, caça-níqueis e decorações.', target: '#tabs [data-v="build"]', ok: () => view === 'build' || !!placing },
   { t: 'Coloque um caça-níquel', x: 'Toque na categoria Caça-níqueis, escolha uma máquina e toque no chão do salão. A frente precisa ficar livre e com caminho até a entrada. R gira.', ok: s => [...items.values()].filter(i => i.v.cat === 'niqueis').length > s.slots },
   { t: 'Ajuste um jogo', x: 'Volte para a aba Salão e toque em qualquer jogo. No painel ao lado você muda as apostas e a vantagem da casa: mais vantagem rende mais, mas irrita os clientes.', target: '#tabs [data-v="salao"]', ok: () => selected && !nonGame(selected.v) },
   { t: 'Monte a equipe', x: 'Abra a aba Equipe. Mesas só abrem com um crupiê no turno, e você precisa de crupiês de dia e de noite. Seguranças, garçons, faxineiros e técnicos também fazem diferença.', target: '#tabs [data-v="team"]', ok: () => view === 'team' },
@@ -2981,10 +3025,11 @@ function tutStep(){
   const st = TUT[tut.i]; tut.s = { tx: cam.tx, tz: cam.tz, dist: cam.dist, yaw: cam.yaw, slots: [...items.values()].filter(i => i.v.cat === 'niqueis').length };
   $('coachStep').textContent = `Passo ${tut.i + 1} de ${TUT.length}`; $('coachTitle').textContent = st.t; $('coachText').textContent = st.x;
   if (st.target){ const el = document.querySelector(st.target); if (el) el.classList.add('pulse'); }
-  $('coach').hidden = false; $('hudHint').hidden = true;
+  tut.open = false; $('coach').hidden = false; $('hudHint').hidden = true;
 }
 function tutUpdate(){
   if (!tut) return;
+  $('coach').classList.toggle('min', !tut.open && innerWidth <= 760 && (view === 'build' || !!placing || !!selected));
   let ok = false; try { ok = TUT[tut.i].ok(tut.s); } catch(e) {}
   if (ok){ tut.i++; sfx.chip(); tutStep(); }
 }
@@ -2994,18 +3039,21 @@ function endTutorial(done){
   if (done) toast('Tutorial concluído. Reveja quando quiser no botão ?', 'good');
 }
 $('coachSkip').onclick = () => endTutorial(false);
+$('coach').addEventListener('click', e => { if (tut && $('coach').classList.contains('min') && !e.target.closest('button')){ tut.open = true; $('coach').classList.remove('min'); } });
 $('coachNext').onclick = () => { if (!tut) return; tut.i++; tutStep(); };
 $('tutAgain').onclick = () => { $('helpScrim').hidden = true; setView('salao'); startTutorial(); };
 /* graphics quality */
-const GFX = { alto: { name: 'Alto', pr: IS_TOUCH ? 1.5 : 2, shadow: true, map: IS_TOUCH ? 1024 : 2048, cap: 1 }, medio: { name: 'Médio', pr: 1.25, shadow: true, map: 1024, cap: 1 }, baixo: { name: 'Baixo', pr: 1, shadow: false, map: 512, cap: 0.7 } };
+const GFX = { alto: { name: 'Alto', pr: IS_TOUCH ? 1.5 : 2, shadow: true, soft: true, points: true, map: IS_TOUCH ? 1024 : 2048, cap: 1 }, medio: { name: 'Médio', pr: 1.25, shadow: true, soft: false, points: true, map: 1024, cap: 1 }, baixo: { name: 'Baixo', pr: 1, shadow: false, soft: false, points: false, map: 512, cap: 0.7 } };
+function pointLightsGfx(){ const on = GFX[gfx].points; if (hemi.userData.base == null) hemi.userData.base = hemi.intensity; scene.traverse(o => { if (o.isPointLight && o.visible !== on){ o.visible = on; } }); hemi.intensity = hemi.userData.base*(on ? 1 : 1.6); }
 let gfx = store.get('gfx', IS_TOUCH ? 'medio' : 'alto'); if (!GFX[gfx]) gfx = 'alto';
 const gfxCap = () => GFX[gfx].cap;
 function applyGfx(k, quiet){
   gfx = k; store.set('gfx', k); const g = GFX[k];
   renderer.setPixelRatio(Math.min(devicePixelRatio || 1, g.pr));
-  if (renderer.shadowMap.enabled !== g.shadow){ renderer.shadowMap.enabled = g.shadow; scene.traverse(o => { if (o.material){ (Array.isArray(o.material) ? o.material : [o.material]).forEach(m => m.needsUpdate = true); } }); }
+  const st = g.soft ? THREE.PCFSoftShadowMap : THREE.PCFShadowMap;
+  if (renderer.shadowMap.enabled !== g.shadow || renderer.shadowMap.type !== st){ renderer.shadowMap.enabled = g.shadow; renderer.shadowMap.type = st; scene.traverse(o => { if (o.material){ (Array.isArray(o.material) ? o.material : [o.material]).forEach(m => m.needsUpdate = true); } }); }
   if (sun.shadow.mapSize.x !== g.map){ sun.shadow.mapSize.set(g.map, g.map); if (sun.shadow.map){ sun.shadow.map.dispose(); sun.shadow.map = null; } }
-  resize();
+  pointLightsGfx(); resize();
   document.querySelectorAll('#gfxSeg button').forEach(b => b.setAttribute('aria-checked', b.dataset.g === k ? 'true' : 'false'));
   if (!quiet) toast(`Gráficos: ${g.name}`);
 }
@@ -3013,10 +3061,10 @@ $('gfxSeg').addEventListener('click', e => { const b = e.target.closest('[data-g
 const fps = { t: 0, n: 0, low: 0, done: {} };
 function perfTick(dt){
   fps.t += dt; fps.n++;
-  if (fps.t < 4) return;
+  if (fps.t < 3) return;
   const f = fps.n/fps.t; fps.t = 0; fps.n = 0;
   if (document.hidden) return;
-  if (f < 26){ fps.low++; if (fps.low >= 2 && gfx !== 'baixo' && !fps.done[gfx]){ fps.done[gfx] = 1; const next = gfx === 'alto' ? 'medio' : 'baixo'; applyGfx(next, true); toast(`O jogo estava lento (${Math.round(f)} quadros por segundo). Gráficos reduzidos para ${GFX[next].name}. Mude no botão ?`); fps.low = 0; } }
+  if (f < 24){ fps.low++; if (fps.low >= 2 && gfx !== 'baixo' && !fps.done[gfx]){ fps.done[gfx] = 1; const next = gfx === 'alto' ? 'medio' : 'baixo'; applyGfx(next, true); toast(`O jogo estava lento (${Math.round(f)} quadros por segundo). Gráficos reduzidos para ${GFX[next].name}. Mude no botão ?`); fps.low = 0; } }
   else fps.low = 0;
 }
 /* ---------- camera and input ---------- */
@@ -3112,7 +3160,7 @@ function updateTags(){
 }
 /* ---------- loop ---------- */
 const clock = new THREE.Clock();
-let uiT = 0, inspT = 0, panelT = 0, achT = 0, started = false;
+let uiT = 0, inspT = 0, panelT = 0, achT = 0, retT = 0, started = false;
 function loop(){
   const dt = Math.min(clock.getDelta(), 0.05), t = clock.elapsedTime;
   const gdt = tick(dt);
@@ -3128,6 +3176,7 @@ function loop(){
   });
   if (ghost){ ghost.children.forEach(() => {}); }
   keyPan(dt); updateCamera(dt); perfTick(dt);
+  if (placing && IS_TOUCH && t > retT){ retT = t + 0.12; centerGhost(); }
   renderer.render(scene, camera);
   if (t > uiT){ uiT = t + 0.25; updateTop(); tutUpdate(); if (t > achT){ achT = t + 2; achCheck(); } }
   if (t > inspT){ inspT = t + 0.5; updateInspectorStats(); if (selected) selBox.position.set(selected.model.group.position.x, FLOOR_Y + 0.05, selected.model.group.position.z); }
