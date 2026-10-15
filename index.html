@@ -223,7 +223,7 @@ table.team td{vertical-align:middle}
 #snack.show{opacity:1;transform:translate(-50%,0)}
 #snack.good{background:#cfeee0}#snack.bad{background:#f5d3d7}
 .hud-hint{position:absolute;z-index:3;left:max(16px,env(safe-area-inset-left,0px));bottom:calc(14px + env(safe-area-inset-bottom,0px));font-size:12px;color:var(--muted);background:rgba(17,18,25,.7);padding:8px 12px;border-radius:12px;max-width:calc(100% - 32px)}
-.scrim{position:absolute;inset:0;z-index:10;background:var(--scrim);display:grid;place-items:center;padding:16px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.scrim{position:absolute;inset:0;z-index:30;background:var(--scrim);display:grid;place-items:center;padding:16px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
 .dialog{width:min(520px,100%);max-height:100%;overflow:auto;background:var(--surface);border:1px solid var(--outline);border-radius:26px;padding:24px;display:flex;flex-direction:column;gap:14px}
 .dialog h2{margin:0;font:400 26px/1.15 var(--display)}
 .dialog ul{margin:0;padding-left:18px;line-height:1.65;font-size:14px}
@@ -363,6 +363,50 @@ table.team td{vertical-align:middle}
 .helpset{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;padding-top:4px}
 .helpset .k{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
 @media (max-width:760px){ .rep2{grid-template-columns:1fr} .coach{padding:12px 14px;left:12px;right:12px;width:auto;transform:none} .coach p{font-size:13px} }
+/* title screen, menu and navigation */
+:root{--navH:0px}
+.ti{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.tabs button{display:inline-flex;align-items:center;gap:7px}
+.menu-btn{display:grid;place-items:center;flex:none}
+.menu-btn svg{width:18px;height:18px;stroke:currentColor;stroke-width:2;stroke-linecap:round;fill:none}
+.title{position:absolute;inset:0;z-index:20;display:flex;align-items:center;background:linear-gradient(90deg,rgba(7,8,11,.94) 0%,rgba(7,8,11,.78) 38%,rgba(7,8,11,.15) 72%,rgba(7,8,11,0));padding-left:max(24px,7vw,env(safe-area-inset-left,0px));padding-right:16px}
+.tpanel{display:flex;flex-direction:column;gap:18px;width:min(420px,100%);animation:tin .8s ease-out both}
+@keyframes tin{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.tpanel h1{margin:0;font:400 clamp(44px,7vw,76px)/.95 var(--display);letter-spacing:.04em;color:var(--on)}
+.tpanel h1 em{font-style:normal;color:var(--gold);display:block}
+.tpanel .tline{margin:0;color:var(--muted);font-size:15px;line-height:1.55;max-width:360px}
+.tbtns{display:flex;flex-direction:column;gap:8px;margin-top:6px}
+.tb{height:auto;min-height:52px;padding:10px 20px;border-radius:16px;flex-direction:column;align-items:flex-start;gap:3px;justify-content:center;white-space:normal;text-align:left}
+.tb b{font:500 16px/1.2 var(--ui);letter-spacing:.02em}
+.tb span{font:400 12px/1.3 var(--ui);opacity:.75}
+.tfoot{font-size:12px;color:var(--muted);letter-spacing:.04em}
+#app.title-on .bar,#app.title-on .hallbar,#app.title-on .coach,#app.title-on .hud-hint,#app.title-on #labels{visibility:hidden}
+.dialog.menu{width:min(460px,100%);gap:16px}
+.mhead{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.mbtns{display:flex;flex-direction:column;gap:8px}
+.mbtns .btn{height:46px;border-radius:14px}
+.settings{display:flex;flex-direction:column;gap:10px;background:var(--surface-2);border-radius:16px;padding:12px 14px}
+.srow{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;font-size:14px}
+.scard{position:relative;overflow:hidden;padding-top:62px}
+.scard .band{position:absolute;left:0;right:0;top:0;height:50px;display:flex;align-items:flex-end;padding:0 14px 8px;font:400 13px/1 var(--display);letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.92);text-shadow:0 1px 2px rgba(0,0,0,.5)}
+@media (max-width:760px){
+  :root{--navH:calc(60px + env(safe-area-inset-bottom,0px))}
+  .tabs{position:fixed;left:0;right:0;bottom:0;z-index:7;order:0;width:auto;margin:0;height:var(--navH);padding:4px 2px env(safe-area-inset-bottom,0px);background:rgba(13,14,19,.98);border-top:1px solid rgba(255,255,255,.08);justify-content:space-around;gap:0;overflow:visible}
+  .tabs button{flex:1 1 0;flex-direction:column;gap:3px;height:52px;padding:0 1px;font:500 9.5px/1 var(--ui);letter-spacing:.02em;text-transform:none;border-radius:12px;min-width:0}
+  .tabs button .ti{width:22px;height:22px}
+  .tabs button[aria-selected="true"]{background:rgba(212,176,106,.12)}
+  .tabs button[aria-selected="true"]::after{display:none}
+  .tabs .badge{position:absolute;top:2px;right:calc(50% - 22px);margin:0}
+  #muteBtn,#helpBtn{display:none}
+  .drawer{bottom:var(--navH)}
+  .sheet{bottom:var(--navH)}
+  .placebar{bottom:calc(var(--navH) + 8px)}
+  #snack{bottom:calc(var(--navH) + 76px)}
+  .title{align-items:flex-end;background:linear-gradient(0deg,rgba(7,8,11,.96) 0%,rgba(7,8,11,.82) 55%,rgba(7,8,11,.1) 85%);padding:0 18px calc(26px + env(safe-area-inset-bottom,0px))}
+  .tpanel{gap:12px}
+  .tpanel .tline{font-size:14px}
+  #app.title-on .tabs{visibility:hidden}
+}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation-duration:.01s!important}}
 </style>
 </head>
@@ -373,15 +417,16 @@ table.team td{vertical-align:middle}
   <canvas id="gl" aria-label="Cassino em 3D visto de cima"></canvas>
   <div id="labels" aria-hidden="true"></div>
   <header class="bar">
+    <button class="icon-btn menu-btn" id="menuBtn" aria-label="Menu e configurações"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
     <div class="brand"><span class="eyebrow" id="brandSub">Administração</span><h1>Meia-Noite Tycoon</h1></div>
     <nav class="tabs" id="tabs" role="tablist" aria-label="Seções">
-      <button role="tab" data-v="salao" aria-selected="true">Salão</button>
-      <button role="tab" data-v="build" aria-selected="false">Construir</button>
-      <button role="tab" data-v="team" aria-selected="false">Equipe <span class="badge" id="teamBadge" hidden>0</span></button>
-      <button role="tab" data-v="events" aria-selected="false">Eventos <span class="badge" id="evBadge" hidden>0</span></button>
-      <button role="tab" data-v="biz" aria-selected="false">Negócios</button>
-      <button role="tab" data-v="panel" aria-selected="false">Painel</button>
-      <button role="tab" data-v="goals" aria-selected="false">Metas</button>
+      <button role="tab" data-v="salao" aria-selected="true"><svg class="ti" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10.5 12 4l9 6.5V20H3z"/><path d="M9.5 20v-5h5v5"/></svg><span>Salão</span></button>
+      <button role="tab" data-v="build" aria-selected="false"><svg class="ti" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M12 8.5v7M8.5 12h7"/></svg><span>Construir</span></button>
+      <button role="tab" data-v="team" aria-selected="false"><svg class="ti" viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8.5" r="3"/><path d="M3.5 19c.6-3.2 2.8-5 5.5-5s4.9 1.8 5.5 5"/><circle cx="17" cy="9.5" r="2.3"/><path d="M15.8 14.2c2.3.2 4 1.8 4.6 4.8"/></svg><span>Equipe</span><span class="badge" id="teamBadge" hidden>0</span></button>
+      <button role="tab" data-v="events" aria-selected="false"><svg class="ti" viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15" rx="2.5"/><path d="M3.5 9.5h17M8 3v4M16 3v4"/><path d="m12 12 1 2 2.2.3-1.6 1.5.4 2.2-2-1-2 1 .4-2.2-1.6-1.5 2.2-.3z"/></svg><span>Eventos</span><span class="badge" id="evBadge" hidden>0</span></button>
+      <button role="tab" data-v="biz" aria-selected="false"><svg class="ti" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="7.5" width="18" height="12" rx="2.5"/><path d="M9 7.5V5.5h6v2M3 12.5h18"/></svg><span>Negócios</span></button>
+      <button role="tab" data-v="panel" aria-selected="false"><svg class="ti" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg><span>Painel</span></button>
+      <button role="tab" data-v="goals" aria-selected="false"><svg class="ti" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 21V4"/><path d="M5 4.5h12l-2.5 4 2.5 4H5"/></svg><span>Metas</span></button>
     </nav>
     <div class="stats">
       <div class="stat cash"><span class="k">Caixa do cassino</span><span class="v" id="sCash">$0</span></div>
@@ -449,6 +494,30 @@ table.team td{vertical-align:middle}
     <div class="ngfoot"><p id="ngSummary"></p><div class="iactions"><button class="btn text" id="ngCancel">Cancelar</button><button class="btn filled" id="ngStart">Começar</button></div></div>
     <p class="hint">O cassino atual será substituído. Seus modelos salvos continuam disponíveis.</p>
   </div></div>
+  <div class="title" id="titleScr" hidden><div class="tpanel">
+    <span class="eyebrow">Administração de cassino em 3D</span>
+    <h1>Meia-Noite <em>Tycoon</em></h1>
+    <p class="tline">Comece com um salão modesto, contrate a equipe, crie seus próprios jogos, enfrente os cassinos rivais e vire o dono da noite da cidade.</p>
+    <div class="tbtns" id="titleBtns"></div>
+    <div class="tfoot" id="titleFoot"></div>
+  </div></div>
+  <div class="scrim" id="menuScrim" hidden><div class="dialog menu" role="dialog" aria-modal="true" aria-labelledby="menuTitle">
+    <div class="mhead"><div><span class="eyebrow" id="menuEyebrow">Jogo pausado</span><h2 id="menuTitle">Menu</h2></div><button class="icon-btn" id="menuClose" aria-label="Fechar">×</button></div>
+    <div class="mbtns" id="menuBtns">
+      <button class="btn filled" data-m="resume">Voltar ao jogo</button>
+      <button class="btn tonal" data-m="new">Novo jogo</button>
+      <button class="btn tonal" data-m="help">Como jogar</button>
+      <button class="btn tonal" data-m="tut">Refazer o tutorial</button>
+      <button class="btn outlined" data-m="title">Salvar e ir ao menu inicial</button>
+    </div>
+    <span class="eyebrow">Configurações</span>
+    <div class="settings">
+      <div class="srow"><span>Gráficos</span><div class="seg" id="gfxSeg" role="radiogroup" aria-label="Qualidade gráfica"><button role="radio" data-g="alto">Alto</button><button role="radio" data-g="medio">Médio</button><button role="radio" data-g="baixo">Baixo</button></div></div>
+      <div class="srow"><span>Som</span><div class="seg" id="sndSeg" role="radiogroup" aria-label="Som"><button role="radio" data-snd="1">Ligado</button><button role="radio" data-snd="0">Desligado</button></div></div>
+      <div class="srow"><span>Relatório à meia-noite</span><div class="seg" id="repSeg" role="radiogroup" aria-label="Relatório diário"><button role="radio" data-rep="1">Mostrar</button><button role="radio" data-rep="0">Não mostrar</button></div></div>
+    </div>
+    <p class="hint">No Baixo o jogo tira as sombras e as luzes extras, reduz a resolução e limita os clientes no salão. Se ficar lento, a qualidade baixa sozinha. O jogo salva sozinho neste navegador.</p>
+  </div></div>
   <div class="coach" id="coach" hidden role="status" aria-live="polite"><span class="eyebrow" id="coachStep">Passo 1</span><b id="coachTitle">Bem-vindo</b><p id="coachText"></p><div class="iactions"><button class="btn text" id="coachSkip">Pular tutorial</button><button class="btn outlined" id="coachNext">Pular passo</button></div></div>
   <div class="scrim" id="repScrim" hidden><div class="dialog report" role="dialog" aria-modal="true" aria-labelledby="repTitle">
     <div><span class="eyebrow" id="repEyebrow">Relatório do dia</span><h2 id="repTitle">Lucro</h2></div>
@@ -489,8 +558,6 @@ table.team td{vertical-align:middle}
         <li><b>Câmera:</b> arraste para mover, botão direito ou Q/E para girar, roda ou pinça para aproximar. WASD também move.</li>
         <li>Velocidade: espaço pausa; 1, 2 e 3 mudam a velocidade. O jogo salva sozinho neste navegador.</li>
       </ul>
-      <div class="helpset"><span class="k">Gráficos</span><div class="seg" id="gfxSeg" role="radiogroup" aria-label="Qualidade gráfica"><button role="radio" data-g="alto">Alto</button><button role="radio" data-g="medio">Médio</button><button role="radio" data-g="baixo">Baixo</button></div><button class="btn outlined" id="tutAgain">Refazer o tutorial</button></div>
-      <p class="hint">No Baixo o jogo tira as sombras, reduz a resolução e limita o número de clientes no salão. Se o jogo ficar lento, a qualidade baixa sozinha.</p>
       <div class="end"><button class="btn tonal" id="helpClose">Fechar</button></div>
     </div>
   </div>
@@ -2158,6 +2225,7 @@ function scenarioCard(){
 function fmtProg(pr){ const o = SC().obj; return o.show ? o.show(pr) : `${pr.a.toLocaleString('pt-BR')} de ${pr.b.toLocaleString('pt-BR')}`; }
 /* new game dialog */
 let ng = { sc: 'vegas', diff: 'normal', mode: 'career' };
+const CITY_COLORS = { vegas: ['#b0217e', '#2a8fb0'], macau: ['#9a0f24', '#c8902a'], monte: ['#1f4f7a', '#8aa7b8'], rio: ['#1f7a3a', '#c9a21a'], atlantic: ['#23304f', '#6a5a3a'], serra: ['#5a1430', '#8a6a2a'] };
 function openNewGame(){
   ng = { sc: S.scenario || 'vegas', diff: S.diff || 'normal', mode: 'career' };
   renderNewGame(); $('ngScrim').hidden = false; dlgResumeNG = S.speed || 1; setSpeed(0);
@@ -2166,7 +2234,7 @@ let dlgResumeNG = 1;
 function renderNewGame(){
   const rec = records();
   $('ngScen').innerHTML = Object.entries(SCENARIOS).map(([k, s]) => { const best = rec[k] || {}, top = Math.max(0, ...Object.values(best));
-    return `<button class="scard" data-sc="${k}" aria-pressed="${ng.sc === k}"><span class="eyebrow">${s.sub}</span><b>${s.name}</b><span>${s.desc}</span><span class="traits">${s.traits.map(t => `<i>${t}</i>`).join('')}</span><span class="sobj">Objetivo: ${s.obj.text} em ${s.obj.days} dias</span>${top ? `<span class="stars">${'★'.repeat(top)}<span style="opacity:.25">${'★'.repeat(3 - top)}</span> melhor resultado</span>` : ''}</button>`; }).join('');
+    return `<button class="scard" data-sc="${k}" aria-pressed="${ng.sc === k}"><span class="band" style="background:linear-gradient(120deg, ${CITY_COLORS[k][0]}, ${CITY_COLORS[k][1]})">${s.sub}</span><b>${s.name}</b><span>${s.desc}</span><span class="traits">${s.traits.map(t => `<i>${t}</i>`).join('')}</span><span class="sobj">Objetivo: ${s.obj.text} em ${s.obj.days} dias</span>${top ? `<span class="stars">${'★'.repeat(top)}<span style="opacity:.25">${'★'.repeat(3 - top)}</span> melhor resultado</span>` : ''}</button>`; }).join('');
   $('ngDiff').innerHTML = Object.entries(DIFFS).map(([k, d]) => `<button role="radio" data-df="${k}" aria-checked="${ng.diff === k}">${d.name}</button>`).join('');
   $('ngDiffText').textContent = DIFFS[ng.diff].desc;
   $('ngMode').querySelectorAll('button').forEach(b => b.setAttribute('aria-checked', b.dataset.m === ng.mode ? 'true' : 'false'));
@@ -2177,9 +2245,9 @@ function renderNewGame(){
 $('ngScen').addEventListener('click', e => { const b = e.target.closest('[data-sc]'); if (b){ ng.sc = b.dataset.sc; renderNewGame(); } });
 $('ngDiff').addEventListener('click', e => { const b = e.target.closest('[data-df]'); if (b){ ng.diff = b.dataset.df; renderNewGame(); } });
 $('ngMode').addEventListener('click', e => { const b = e.target.closest('[data-m]'); if (b){ ng.mode = b.dataset.m; renderNewGame(); } });
-$('ngCancel').onclick = () => { $('ngScrim').hidden = true; setSpeed(dlgResumeNG); startTutorialIfNew(); };
+$('ngCancel').onclick = () => { $('ngScrim').hidden = true; if (titleOn) return; setSpeed(dlgResumeNG); startTutorialIfNew(); };
 $('ngStart').onclick = () => {
-  $('ngScrim').hidden = true; newGame(ng.mode, ng.sc, ng.diff); goHall('main'); updateBrand(); setSpeed(1); select(null); setView('salao');
+  $('ngScrim').hidden = true; hideTitle(); newGame(ng.mode, ng.sc, ng.diff); goHall('main'); updateBrand(); setSpeed(1); select(null); setView('salao');
   startTutorialIfNew();
   toast(ng.mode === 'free' ? `Modo livre em ${SCENARIOS[ng.sc].name}` : `${SCENARIOS[ng.sc].name}: ${SCENARIOS[ng.sc].obj.text} em ${objDays()} dias`, 'good');
 };
@@ -3041,7 +3109,7 @@ function endTutorial(done){
 $('coachSkip').onclick = () => endTutorial(false);
 $('coach').addEventListener('click', e => { if (tut && $('coach').classList.contains('min') && !e.target.closest('button')){ tut.open = true; $('coach').classList.remove('min'); } });
 $('coachNext').onclick = () => { if (!tut) return; tut.i++; tutStep(); };
-$('tutAgain').onclick = () => { $('helpScrim').hidden = true; setView('salao'); startTutorial(); };
+function restartTutorial(){ $('helpScrim').hidden = true; setView('salao'); startTutorial(); }
 /* graphics quality */
 const GFX = { alto: { name: 'Alto', pr: IS_TOUCH ? 1.5 : 2, shadow: true, soft: true, points: true, map: IS_TOUCH ? 1024 : 2048, cap: 1 }, medio: { name: 'Médio', pr: 1.25, shadow: true, soft: false, points: true, map: 1024, cap: 1 }, baixo: { name: 'Baixo', pr: 1, shadow: false, soft: false, points: false, map: 512, cap: 0.7 } };
 function pointLightsGfx(){ const on = GFX[gfx].points; if (hemi.userData.base == null) hemi.userData.base = hemi.intensity; scene.traverse(o => { if (o.isPointLight && o.visible !== on){ o.visible = on; } }); hemi.intensity = hemi.userData.base*(on ? 1 : 1.6); }
@@ -3067,6 +3135,60 @@ function perfTick(dt){
   if (f < 24){ fps.low++; if (fps.low >= 2 && gfx !== 'baixo' && !fps.done[gfx]){ fps.done[gfx] = 1; const next = gfx === 'alto' ? 'medio' : 'baixo'; applyGfx(next, true); toast(`O jogo estava lento (${Math.round(f)} quadros por segundo). Gráficos reduzidos para ${GFX[next].name}. Mude no botão ?`); fps.low = 0; } }
   else fps.low = 0;
 }
+/* ---------- title screen and pause menu ---------- */
+let titleOn = false, titleResume = 1, menuResume = 1;
+function saveSummary(){ return `${SC().name} · dia ${S.day} · ${S.mode === 'free' ? 'modo livre' : money(S.cash)}`; }
+function showTitle(first){
+  titleOn = true; titleResume = S.speed || 1; setSpeed(0);
+  if (placing) cancelPlacing(); select(null); setView('salao');
+  $('helpScrim').hidden = true; $('menuScrim').hidden = true;
+  cam.dist = Math.max(cam.dist, 30); cam.pitch = 0.62;
+  $('app').classList.add('title-on'); $('titleScr').hidden = false;
+  const stars = Object.values(records()).reduce((a, r) => a + Math.max(0, ...Object.values(r)), 0);
+  $('titleBtns').innerHTML = (first
+    ? `<button class="btn filled tb" data-t="new"><b>Começar a jogar</b><span>Escolha a cidade e a dificuldade</span></button>`
+    : `<button class="btn filled tb" data-t="cont"><b>Continuar</b><span>${saveSummary()}</span></button><button class="btn tonal tb" data-t="new"><b>Novo jogo</b><span>Outra cidade, dificuldade ou modo livre</span></button>`)
+    + `<button class="btn tonal tb" data-t="help"><b>Como jogar</b></button><button class="btn tonal tb" data-t="cfg"><b>Configurações</b><span>Gráficos, som e relatório</span></button>`;
+  $('titleFoot').textContent = `${ACH.filter(a => achs[a[0]]).length} de ${ACH.length} conquistas · ${stars} ${stars === 1 ? 'estrela' : 'estrelas'} em cenários`;
+  setTimeout(() => { const b = $('titleBtns').querySelector('button'); if (b) b.focus(); }, 60);
+}
+function hideTitle(){ if (!titleOn) return; titleOn = false; $('titleScr').hidden = true; $('app').classList.remove('title-on'); cam.pitch = 0.95; }
+$('titleBtns').addEventListener('click', e => {
+  const b = e.target.closest('[data-t]'); if (!b) return; sfx.click();
+  const t = b.dataset.t;
+  if (t === 'cont'){ hideTitle(); setSpeed(titleResume); if (viewHall !== 'main') goHall(viewHall); }
+  else if (t === 'new') openNewGame();
+  else if (t === 'help'){ $('helpScrim').hidden = false; $('helpClose').focus(); }
+  else if (t === 'cfg') openMenu(true);
+});
+function syncSettings(){
+  document.querySelectorAll('#gfxSeg button').forEach(b => b.setAttribute('aria-checked', b.dataset.g === gfx ? 'true' : 'false'));
+  document.querySelectorAll('#sndSeg button').forEach(b => b.setAttribute('aria-checked', (b.dataset.snd === '1') === !sfx.muted ? 'true' : 'false'));
+  const rep = store.get('report', true); document.querySelectorAll('#repSeg button').forEach(b => b.setAttribute('aria-checked', (b.dataset.rep === '1') === rep ? 'true' : 'false'));
+}
+function openMenu(settingsOnly){
+  if (!titleOn){ menuResume = S.speed; setSpeed(0); }
+  $('menuBtns').hidden = !!settingsOnly;
+  $('menuEyebrow').textContent = settingsOnly ? 'Meia-Noite Tycoon' : `Jogo pausado · ${saveSummary()}`;
+  $('menuTitle').textContent = settingsOnly ? 'Configurações' : 'Menu';
+  syncSettings(); $('menuScrim').hidden = false;
+  setTimeout(() => { const b = $('menuScrim').querySelector(settingsOnly ? '#menuClose' : '[data-m="resume"]'); if (b) b.focus(); }, 40);
+}
+function closeMenu(){ if ($('menuScrim').hidden) return; $('menuScrim').hidden = true; if (!titleOn) setSpeed(menuResume); }
+$('menuBtn').onclick = () => { sfx.click(); openMenu(false); };
+$('menuClose').onclick = closeMenu;
+$('menuScrim').addEventListener('pointerdown', e => { if (e.target === $('menuScrim')) closeMenu(); });
+$('menuBtns').addEventListener('click', e => {
+  const b = e.target.closest('[data-m]'); if (!b) return; const m = b.dataset.m;
+  if (m === 'resume') closeMenu();
+  else if (m === 'new'){ $('menuScrim').hidden = true; setSpeed(menuResume); openNewGame(); }
+  else if (m === 'help'){ $('helpScrim').hidden = false; $('helpClose').focus(); }
+  else if (m === 'tut'){ closeMenu(); restartTutorial(); }
+  else if (m === 'title'){ save(); $('menuScrim').hidden = true; setSpeed(menuResume); showTitle(false); toast('Jogo salvo'); }
+});
+$('sndSeg').addEventListener('click', e => { const b = e.target.closest('[data-snd]'); if (!b) return; const want = b.dataset.snd === '1'; if (want === sfx.muted) $('muteBtn').click(); syncSettings(); });
+$('repSeg').addEventListener('click', e => { const b = e.target.closest('[data-rep]'); if (!b) return; store.set('report', b.dataset.rep === '1'); syncSettings(); });
+$('gfxSeg').addEventListener('click', () => setTimeout(syncSettings, 0));
 /* ---------- camera and input ---------- */
 const cam = { tx: 0, tz: 8, yaw: 0, pitch: 0.95, dist: IS_TOUCH ? 40 : 32 };
 const camS = Object.assign({}, cam);
@@ -3120,12 +3242,14 @@ const keys = {};
 addEventListener('keydown', e => {
   if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT') return;
   if (!$('helpScrim').hidden){ if (e.key === 'Escape') $('helpScrim').hidden = true; return; }
+  if (!$('menuScrim').hidden){ if (e.key === 'Escape') closeMenu(); return; }
+  if (titleOn) return;
   if (!$('evScrim').hidden) return;
   if (!$('repScrim').hidden){ if (e.key === 'Escape' || e.key === 'Enter') closeReport(); return; }
   if (!$('ngScrim').hidden){ if (e.key === 'Escape') $('ngCancel').click(); return; }
   if (!$('edScrim').hidden){ if (e.key === 'Escape') closeEditor(); return; }
   const k = e.key.toLowerCase(); keys[k] = true;
-  if (k === 'escape'){ if (placing) cancelPlacing(); else select(null); }
+  if (k === 'escape'){ if (placing) cancelPlacing(); else if (selected || selCust) select(null); else openMenu(); }
   else if (k === 'r') rotatePlacing();
   else if (k === ' ' && e.target.tagName !== 'BUTTON'){ e.preventDefault(); setSpeed(S.speed ? 0 : 1); }
   else if (k === '1') setSpeed(1); else if (k === '2') setSpeed(2); else if (k === '3') setSpeed(4);
@@ -3175,6 +3299,7 @@ function loop(){
     it.model.glow.forEach(g => g.material.emissiveIntensity = 0.8 + 0.4*Math.sin(t*4));
   });
   if (ghost){ ghost.children.forEach(() => {}); }
+  if (titleOn) cam.yaw += dt*0.07;
   keyPan(dt); updateCamera(dt); perfTick(dt);
   if (placing && IS_TOUCH && t > retT){ retT = t + 0.12; centerGhost(); }
   renderer.render(scene, camera);
@@ -3195,7 +3320,7 @@ if (!S.candidates) refreshCandidates();
 initEvents(false);
 setSpeed(S.speed == null ? 1 : S.speed);
 applyGfx(gfx, true); resize(); updateTop(); setView('salao'); if (viewHall !== 'main') goHall(viewHall);
-if (!hadSave) openNewGame();
+showTitle(!hadSave);
 addEventListener('beforeunload', save);
 document.addEventListener('visibilitychange', () => { if (document.hidden) save(); });
 requestAnimationFrame(loop);
